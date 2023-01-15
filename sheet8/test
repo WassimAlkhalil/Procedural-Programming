@@ -1,0 +1,73 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <limits.h>
+
+#ifndef M_PI
+#  define M_PI 3.1415926535897932
+#endif
+
+//Konstanten definieren
+
+
+//Funktion: Zeichnen eines Rechteckes
+int Draw(FILE *fp, double x, double y, double width, double height, double rot){
+
+    double rx = 0.0;
+    double ry = 0.0;
+    char color[] = {"red"};
+
+    fprintf(fp, "<?xml version='1.0' encoding='UTF-8'?>\n"
+    "<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' version='1.1' width='100%%' height='100%%' viewBox='-50 -50 100 100' transform='scale(1 -1)'>\n"
+    "  <title>Exampel</title>\n");
+
+    fprintf(fp, "<rect x='%f' y='%f' width='%f' height='%f' transform='rotate(%f %f %f)' style='fill:%s; stroke-width:0;' />\n",x, y, width, height, rot, rx, ry, color);
+    
+
+    return 0;
+}
+
+//Funktion: Berechnung der Eckpunkte/Referenzpunkte
+int * SQkoords(double x, double y, double sqheight, double angle){
+  static double koords[2];
+  koords[0] = x - sqheight * sin(angle);
+  koords[1] = y + sqheight * cos(angle);
+  return koords;
+}
+
+/*weitere Funktionen, falls nötig
+*/
+
+/*
+Main-Funktion
+*/
+
+int main()
+{
+  //Initialisierung
+  double angle, length, depth, *koords;
+
+  printf("Geben Sie die Startlänge der Hypothenuse ein: ");
+  scanf("%d", &length);
+  printf("Geben Sie nun den Winkel alpha ein: ");
+  scanf("%d", &angle);
+  printf("Geben Sie die Rekursionstiefe ein: ");
+  scanf("%d", &depth);
+  
+  FILE * fp;
+  fp = fopen("svg_example.svg","w");
+
+  //Pythagorasbaum -> im SVG-Format
+  Draw(fp, 0, 0, length, length, -50);
+
+  koords = SQkoords(0, 0, length, angle);
+
+  printf("%d", koords[0]);
+  
+  fprintf(fp, "</svg>\n");
+  
+  fclose(fp);
+
+  return 0;
+}
+
